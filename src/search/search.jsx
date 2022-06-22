@@ -234,7 +234,8 @@ const SearchForm = ({requestType}) => {
 
   const handleSearchInputFocusChange = (isActive) => {
     //isActive && setisOpen(isActive)
-    setisOpen(isActive);
+    // setisOpen(isActive);
+    setisOpen(true)
   };
 
   const handleSearchInputTextChange = (searchText) => {

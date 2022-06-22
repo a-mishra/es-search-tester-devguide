@@ -250,7 +250,7 @@ const ResultItemContainer = styled.div`
     letter-spacing: 0.16px;
     text-align: left;
     color: #414141;
-    margin-bottom: 2px;
+    margin: 2px 0px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -265,7 +265,7 @@ const ResultItemContainer = styled.div`
     letter-spacing: normal;
     text-align: left;
     color: #414141;
-    margin-bottom: 2px;
+    margin: 2px 0px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -280,7 +280,7 @@ const ResultItemContainer = styled.div`
     letter-spacing: normal;
     text-align: left;
     color: #808080;
-    margin-bottom: 2px;
+    margin: 2px 0px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
