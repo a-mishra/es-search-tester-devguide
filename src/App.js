@@ -9,11 +9,11 @@ export default function App() {
       <Wrapper>
         <div>
           <h1>Old Search</h1>
-          <SearchForm requestType={'GET'}/>
+          <SearchForm searchType={'OLD'}/>
         </div>
         <div>
           <h1>New Search</h1>
-          <SearchForm requestType={'POST'}/>
+          <SearchForm searchType={'NEW'}/>
         </div>
       </Wrapper>
     </div>

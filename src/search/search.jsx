@@ -33,7 +33,7 @@ const Fade = forwardRef(function Fade(props, ref) {
   );
 });
 
-const SearchForm = ({requestType}) => {
+const SearchForm = ({searchType}) => {
   const [searchText, setsearchText] = useState("");
   const [isOpen, setisOpen] = useState(false);
   const [searchHistory, setsearchHistory] = useState([]);
@@ -75,6 +75,7 @@ const SearchForm = ({requestType}) => {
     setsearchResults({
       hasError: false,
       data: [],
+      total: 0,
       isFetching: true
     });
 
@@ -86,6 +87,7 @@ const SearchForm = ({requestType}) => {
         setsearchResults({
           hasError: false,
           data: [],
+          total: 0,
           isFetching: false
         });
       }
@@ -100,7 +102,7 @@ const SearchForm = ({requestType}) => {
   
 
   const getSearchResults = (searchText) => {
-    if(requestType == 'POST') {
+    if(searchType == 'NEW') {
 
       axios
       .post(
@@ -149,9 +151,12 @@ const SearchForm = ({requestType}) => {
               items.push(item);
             });
 
+          let total = body?.hits?.total?.value;
+
           setsearchResults({
             hasError: items.length > 0 ? false : true,
             data: items,
+            total: total,
             isFetching: false
           });
 
@@ -181,7 +186,7 @@ const SearchForm = ({requestType}) => {
             // throw Error(response, statusText);
           }
           //---------------
-          let items = [];
+          let items = [];          
           body &&
             body.hits &&
             body.hits.hits &&
@@ -213,9 +218,12 @@ const SearchForm = ({requestType}) => {
               items.push(item);
             });
 
+          let total = body?.hits?.total?.value;
+
           setsearchResults({
             hasError: items.length > 0 ? false : true,
             data: items,
+            total: total,
             isFetching: false
           });
 
@@ -297,6 +305,7 @@ const SearchForm = ({requestType}) => {
               searchHistory={searchHistory}
               searchSuggestions={searchSuggestions}
               searchText={searchText}
+              searchType={searchType}
             />
           </Fade>
         )}

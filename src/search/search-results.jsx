@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import ArrowLeft from '../assets/icons/arrow-left.svg';
 
 const NoResult = () => {
   return (
@@ -25,21 +26,25 @@ const Results = ({ items, onSelect, searchText, isFetching }) => {
           <p>Loading...</p>
         </LoadingWrapper>
       ) : (
-        items &&
-        items.length &&
-        items.map((item) => {
-          return (
-            <ResultItem
-              title={item.title}
-              description={item.description}
-              path={item.path}
-              key={item.id}
-              onSelect={() => {
-                onSelect({ item, source: "results" });
-              }}
-            />
-          );
-        })
+        <>
+          {
+            items &&
+            items.length &&
+            items.map((item) => {
+              return (
+                <ResultItem
+                  title={item.title}
+                  description={item.description}
+                  path={item.path}
+                  key={item.id}
+                  onSelect={() => {
+                    onSelect({ item, source: "results" });
+                  }}
+                />
+              );
+            })
+          }
+        </>
       )}
     </ResultContainer>
   );
@@ -104,7 +109,8 @@ const SearchResults = ({
   searchResults,
   searchHistory,
   searchSuggestions,
-  searchText
+  searchText,
+  searchType
 }) => {
   // to handle first time user
   if (
@@ -120,12 +126,15 @@ const SearchResults = ({
           <NoResult />
         ) : (searchResults.data && searchResults.data.length > 0) ||
           searchResults.isFetching ? (
-          <Results
-            items={searchResults.data}
-            onSelect={onSelect}
-            searchText={searchText}
-            isFetching={searchResults.isFetching}
-          />
+          <>
+            <Results
+              items={searchResults.data}
+              onSelect={onSelect}
+              searchText={searchText}
+              isFetching={searchResults.isFetching}
+            />
+            { searchType == 'NEW' && <Pagination total={searchResults.total} pageSize={5} page={1} paginate={(direction)=>{console.log(direction)}}/> }
+          </>
         ) : (
           <>
             {searchHistory && searchHistory.length > 0 && (
@@ -292,4 +301,54 @@ const LoadingWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+
+const Pagination = ({total, page, pageSize, paginate }) => {
+  if (total)
+    return (
+      <PaginationWrapper>
+        {!!(page) && <span onClick={()=>{paginate(-1)}} className="nav"><img src={ArrowLeft} /></span>}
+        <span>{`${Math.min(page * pageSize + 1, total)} - ${Math.min((page*pageSize)+pageSize, total)} of ${total}`}</span>
+        { (page*pageSize)+pageSize <= total  && <span onClick={()=>{paginate(1)}} className="nav"><img src={ArrowLeft} className='rotate180' onClick={()=>{paginate(1)}} /></span>}
+      </PaginationWrapper>
+    )
+  else 
+      return(
+        <></>
+      )
+}
+
+const PaginationWrapper = styled.div`
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.71;
+  letter-spacing: 0.14px;
+  color: #808080;
+  margin-top: 8px;
+
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 4px;
+
+  .rotate180 {
+    transform: rotate(180deg);
+  }
+
+  .nav {
+    &:hover {
+      background: #ecfaf4;
+    }
+    border-radius: 12px;
+
+    img {
+      padding: 0px 12px;
+    }
+  }
+
+
 `;
