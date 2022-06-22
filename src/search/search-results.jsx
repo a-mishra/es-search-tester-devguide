@@ -147,15 +147,14 @@ export default SearchResults;
 
 const StyledContainer = styled.div`
   height: max-content;
-  border: solid 0.5px
-    ${(props) => (props.active ? props.colors.primary : props.colors.bg.gray3)};
+  border: solid 0.5px #ccc;
   width: 462.9px;
   padding: 16px 16px;
   margin-top: 12px;
   border-radius: 4px;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.08);
   background-color: #ffffff;
-  color: ${(props) => props.colors.misc.placeholder.dark};
+  color: #ccc;
   display: flex;
   flex-direction: column;
   align-items: center;

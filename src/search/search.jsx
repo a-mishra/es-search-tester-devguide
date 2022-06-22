@@ -1,12 +1,13 @@
 import { useRef, useState, useEffect, forwardRef } from "react";
 import { useSpring, animated } from "react-spring";
-import { Popper } from "@material-ui/core/Popper";
+import Popper from "@material-ui/core/Popper";
 
 import SearchInput from "./search-input";
 import SearchResults from "./search-results";
 import axios from "axios";
 
 import styled from "@emotion/styled";
+import { getSearchQuery } from './utils';
 
 const Fade = forwardRef(function Fade(props, ref) {
   const { in: open, children, onEnter, onExited, ...other } = props;
@@ -32,7 +33,7 @@ const Fade = forwardRef(function Fade(props, ref) {
   );
 });
 
-const SearchForm = () => {
+const SearchForm = ({requestType}) => {
   const [searchText, setsearchText] = useState("");
   const [isOpen, setisOpen] = useState(false);
   const [searchHistory, setsearchHistory] = useState([]);
@@ -96,10 +97,15 @@ const SearchForm = () => {
     };
   }, [searchText]);
 
+  
+
   const getSearchResults = (searchText) => {
-    axios
-      .get(
-        `${"https://devguidetest.payu.in/wordpress/index.php/wp-json/es"}?search=${searchText}`
+    if(requestType == 'POST') {
+
+      axios
+      .post(
+        `${"https://devguide.payu.in/wordpress/index.php/wp-json/es"}`, 
+        getSearchQuery(searchText)
       )
       .then(function (response) {
         //   console.log(response);
@@ -157,6 +163,73 @@ const SearchForm = () => {
       .catch(function (error) {
         console.log(error);
       });
+
+    }
+    else {
+
+      axios
+      .get(
+        `${"https://devguide.payu.in/wordpress/index.php/wp-json/es"}?search=${searchText}`
+      )
+      .then(function (response) {
+        //   console.log(response);
+        if (response.status >= 200 && response.status < 299) {
+          let body = response.data;
+          try {
+            body = JSON.parse(body);
+          } catch {
+            // throw Error(response, statusText);
+          }
+          //---------------
+          let items = [];
+          body &&
+            body.hits &&
+            body.hits.hits &&
+            body.hits.hits.forEach((element) => {
+              let item = {
+                id: element._source.ID,
+                title: element._source.post_title,
+                description: element._source.post_excerpt,
+                path:
+                  element._source.meta &&
+                  element._source.meta.path &&
+                  element._source.meta.path.length > 0 &&
+                  element._source.meta.path[0] &&
+                  element._source.meta.path[0].value,
+                slug: element._source.post_name,
+                icon:
+                  element._source.meta &&
+                  element._source.meta.post_icon &&
+                  element._source.meta.post_icon.length > 0 &&
+                  element._source.meta.post_icon[0] &&
+                  element._source.meta.post_icon[0].value,
+                suggested_posts:
+                  element._source.meta &&
+                  element._source.meta.suggested_posts &&
+                  element._source.meta.suggested_posts.length > 0 &&
+                  element._source.meta.suggested_posts[0] &&
+                  element._source.meta.suggested_posts[0].value
+              };
+              items.push(item);
+            });
+
+          setsearchResults({
+            hasError: items.length > 0 ? false : true,
+            data: items,
+            isFetching: false
+          });
+
+          //---------------
+        } else {
+          // throw Error(response, statusText);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    }
+
   };
 
   const handleSearchInputFocusChange = (isActive) => {

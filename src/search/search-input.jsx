@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "@emotion/styled";
-import { InputBase } from "@material-ui/core/InputBase";
+import InputBase from "@material-ui/core/InputBase";
 
 const SearchInput = ({ onChange, onFocusChange }) => {
   const [active, setactive] = useState(false);
